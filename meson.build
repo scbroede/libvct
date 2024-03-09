@@ -3,14 +3,17 @@ project('libvct', 'c',
     version: '1.3.1'
 )
 
+fs = import('fs')
+
 cc = meson.get_compiler('c')
 
-libvct = cc.find_library('vct', dirs : meson.current_source_dir() / 'prebuilt')
+libvct = fs.copyfile('prebuilt' / 'libvct.a')
 nitrosdk_dep = dependency('NitroSDK')
 
 libvct_dep = declare_dependency(
-    dependencies: [libvct, nitrosdk_dep],
-    include_directories: include_directories('include')
+    dependencies: nitrosdk_dep,
+    include_directories: include_directories('include'),
+    link_with: libvct
 )
 
 meson.override_dependency('libvct', libvct_dep)
